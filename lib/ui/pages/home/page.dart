@@ -6,7 +6,7 @@ import 'package:trackify/domain/models/expense.dart';
 import 'package:trackify/ui/blocs/expenses/bloc.dart';
 import 'package:trackify/ui/router/routes.dart';
 import 'package:trackify/ui/utils.dart';
-import 'package:trackify/ui/widgets/loading_indcator.dart';
+import 'package:trackify/ui/widgets/loading_indicator.dart';
 
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -33,7 +33,7 @@ class HomePage extends StatelessWidget {
       ),
       body: BlocBuilder<ExpensesBloc, ExpensesState>(
         builder: (context, state) => switch (state) {
-          ExpensesLoadInProgress() => const LoadingInidcator(),
+          ExpensesLoadInProgress() => const LoadingIndicator(),
           ExpensesLoadOnSuccess(:final expenses) when expenses.isEmpty =>
             const Center(
               child: Text(
