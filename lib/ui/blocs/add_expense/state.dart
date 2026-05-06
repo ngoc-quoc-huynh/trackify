@@ -20,4 +20,7 @@ final class AddExpenseLoadOnSuccess extends AddExpenseState {
   const AddExpenseLoadOnSuccess(this.expense);
 
   final Expense expense;
+
+  @override
+  List<Object?> get props => [expense];
 }

@@ -17,6 +17,9 @@ final class ExpensesLoadOnSuccess extends ExpensesState {
 
   final List<Expense> expenses;
   final ExpenseCategory? category;
+
+  @override
+  List<Object?> get props => [expenses, category];
 }
 
 final class ExpensesLoadOnFailure extends ExpensesState {
