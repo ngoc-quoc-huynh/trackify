@@ -13,7 +13,7 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
   ExpensesBloc(this._repository) : super(const ExpensesLoadInProgress()) {
     on<ExpensesInitializeEvent>(
       _onExpensesInitializeEvent,
-      transformer: droppable(),
+      transformer: restartable(),
     );
     on<ExpensesDeleteEvent>(
       _onExpensesDeleteEvent,
