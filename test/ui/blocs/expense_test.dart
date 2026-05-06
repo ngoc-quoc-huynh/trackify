@@ -35,7 +35,7 @@ void main() {
       act: (bloc) => bloc.add(const ExpensesInitializeEvent()),
       expect: () => [
         const ExpensesLoadInProgress(),
-        ExpensesLoadOnSuccess([expense]),
+        ExpensesLoadOnSuccess(expenses: [expense]),
       ],
       verify: (_) => verify(repository.getAll).called(1),
     );
@@ -61,12 +61,12 @@ void main() {
       setUp: () => when(
         () => repository.delete(expense.id),
       ).thenAnswer((_) => Future.value()),
-      seed: () => ExpensesLoadOnSuccess([expense]),
+      seed: () => ExpensesLoadOnSuccess(expenses: [expense]),
       build: createBloc,
       act: (bloc) => bloc.add(ExpensesDeleteEvent(expense.id)),
       expect: () => [
         const ExpensesLoadInProgress(),
-        const ExpensesLoadOnSuccess([]),
+        const ExpensesLoadOnSuccess(expenses: []),
       ],
       verify: (_) => verify(() => repository.delete(expense.id)).called(1),
     );
@@ -76,7 +76,7 @@ void main() {
       setUp: () => when(
         () => repository.delete(expense.id),
       ).thenThrow(Exception()),
-      seed: () => ExpensesLoadOnSuccess([expense]),
+      seed: () => ExpensesLoadOnSuccess(expenses: [expense]),
       build: createBloc,
       act: (bloc) => bloc.add(ExpensesDeleteEvent(expense.id)),
       expect: () => [

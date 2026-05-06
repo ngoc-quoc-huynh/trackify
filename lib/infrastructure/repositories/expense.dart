@@ -43,12 +43,15 @@ WHERE id = ?
 
   @override
   Future<List<Expense>> getAll([ExpenseCategory? category]) async {
-    final rows = await _db.getAll('''
+    final rows = await _db.getAll(
+      '''
 SELECT id, description, category, value, date
 FROM $tableName
 ${category == null ? '' : 'WHERE category = ?'}
 ORDER BY date DESC, id DESC
-    ''');
+    ''',
+      [?category?.name],
+    );
 
     return rows
         .map((row) => ExpenseEntity.fromRow(row).toDomain())

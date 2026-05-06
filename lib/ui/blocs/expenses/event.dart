@@ -6,7 +6,9 @@ sealed class ExpensesEvent {
 }
 
 final class ExpensesInitializeEvent extends ExpensesEvent {
-  const ExpensesInitializeEvent();
+  const ExpensesInitializeEvent([this.category]);
+
+  final ExpenseCategory? category;
 }
 
 final class ExpensesDeleteEvent extends ExpensesEvent {

@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:trackify/domain/interfaces/expense.dart';
+import 'package:trackify/domain/models/category.dart';
 import 'package:trackify/domain/models/expense.dart';
 
 part 'event.dart';
@@ -29,8 +30,8 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
     emit(const ExpensesLoadInProgress());
 
     try {
-      final expenses = await _repository.getAll();
-      emit(ExpensesLoadOnSuccess(expenses));
+      final expenses = await _repository.getAll(event.category);
+      emit(ExpensesLoadOnSuccess(expenses: expenses, category: event.category));
     } on Exception {
       emit(const ExpensesLoadOnFailure());
     }
@@ -40,7 +41,7 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
     ExpensesDeleteEvent event,
     Emitter<ExpensesState> emit,
   ) async {
-    if (state case ExpensesLoadOnSuccess(:final expenses)) {
+    if (state case ExpensesLoadOnSuccess(:final category, :final expenses)) {
       emit(const ExpensesLoadInProgress());
 
       try {
@@ -48,7 +49,7 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
         final newExpenses = List.of(expenses)
           ..removeWhere((expense) => expense.id == event.id);
         emit(
-          ExpensesLoadOnSuccess(newExpenses),
+          ExpensesLoadOnSuccess(expenses: newExpenses, category: category),
         );
       } on Exception {
         emit(const ExpensesLoadOnFailure());

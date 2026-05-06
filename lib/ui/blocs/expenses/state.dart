@@ -13,9 +13,10 @@ final class ExpensesLoadInProgress extends ExpensesState {
 }
 
 final class ExpensesLoadOnSuccess extends ExpensesState {
-  const ExpensesLoadOnSuccess(this.expenses);
+  const ExpensesLoadOnSuccess({required this.expenses, this.category});
 
   final List<Expense> expenses;
+  final ExpenseCategory? category;
 }
 
 final class ExpensesLoadOnFailure extends ExpensesState {

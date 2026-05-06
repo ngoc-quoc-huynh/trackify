@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:trackify/domain/models/category.dart';
 import 'package:trackify/domain/models/expense.dart';
 import 'package:trackify/ui/blocs/expenses/bloc.dart';
 import 'package:trackify/ui/router/routes.dart';
@@ -25,6 +26,10 @@ class HomePage extends StatelessWidget {
       ),
       appBar: AppBar(
         title: const Text('Trackify'),
+        bottom: const PreferredSize(
+          preferredSize: Size.fromHeight(50),
+          child: _CategoryFilter(),
+        ),
       ),
       body: BlocBuilder<ExpensesBloc, ExpensesState>(
         builder: (context, state) => switch (state) {
@@ -91,6 +96,43 @@ class _Body extends StatelessWidget {
       },
       separatorBuilder: (_, _) => const Divider(),
       itemCount: _expenses.length,
+    );
+  }
+}
+
+class _CategoryFilter extends StatelessWidget {
+  const _CategoryFilter();
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      scrollDirection: .horizontal,
+      child: Row(
+        spacing: 10,
+        children: ExpenseCategory.values
+            .map(
+              (c) => BlocSelector<ExpensesBloc, ExpensesState, bool>(
+                selector: (state) => switch (state) {
+                  ExpensesLoadInProgress() => false,
+                  ExpensesLoadOnSuccess(:final category) => c == category,
+                  ExpensesLoadOnFailure() => false,
+                },
+                builder: (context, state) => ChoiceChip(
+                  label: Text(c.name),
+                  selected: state,
+                  onSelected: (val) => switch (val) {
+                    true => context.read<ExpensesBloc>().add(
+                      ExpensesInitializeEvent(c),
+                    ),
+                    false => context.read<ExpensesBloc>().add(
+                      const ExpensesInitializeEvent(),
+                    ),
+                  },
+                ),
+              ),
+            )
+            .toList(growable: false),
+      ),
     );
   }
 }
