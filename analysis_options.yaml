@@ -1,0 +1,8 @@
+include: package:cosee_lints/analysis_options.yaml
+
+dart_code_linter:
+  extends:
+    - package:cosee_lints/metrics.yaml
+  rules:
+    # TODO: Add i18n
+    - avoid-non-ascii-symbols: false

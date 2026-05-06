@@ -1,0 +1,36 @@
+name: trackify
+description: "A new Flutter project."
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.11.5
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Navigator
+  go_router: ^17.2.3
+
+  # State Management
+  flutter_bloc: ^9.1.1
+  bloc_concurrency: ^0.3.0
+
+  # Utils
+  equatable: ^2.0.8
+  get_it: ^9.2.1
+
+dev_dependencies:
+  # Linter
+  cosee_lints: ^0.13.0
+  dart_code_linter: ^4.0.3
+
+  # Test
+  flutter_test:
+    sdk: flutter
+  bloc_test: ^10.0.0
+  mocktail: ^1.0.5
+
+flutter:
+  uses-material-design: true
