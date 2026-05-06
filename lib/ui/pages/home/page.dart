@@ -30,8 +30,10 @@ class HomePage extends StatelessWidget {
         builder: (context, state) => switch (state) {
           ExpensesLoadInProgress() => const LoadingInidcator(),
           ExpensesLoadOnSuccess(:final expenses) when expenses.isEmpty =>
-            const Text(
-              'There are no expenses yet, try adding one.',
+            const Center(
+              child: Text(
+                'There are no expenses yet, try adding one.',
+              ),
             ),
           ExpensesLoadOnSuccess(:final expenses) => _Body(expenses),
           ExpensesLoadOnFailure() => const Text('Ooops, something went wrong'),
@@ -77,9 +79,9 @@ class _Body extends StatelessWidget {
                 ),
               ),
               IconButton(
-                onPressed: () {
-                  // TODO: Implement delte
-                },
+                onPressed: () => context.read<ExpensesBloc>().add(
+                  ExpensesDeleteEvent(expense.id),
+                ),
                 icon: const Icon(Icons.delete_outline),
                 tooltip: 'Delete expense',
               ),

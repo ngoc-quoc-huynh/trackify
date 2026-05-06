@@ -14,6 +14,10 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
       _onExpensesInitializeEvent,
       transformer: droppable(),
     );
+    on<ExpensesDeleteEvent>(
+      _onExpensesDeleteEvent,
+      transformer: droppable(),
+    );
   }
 
   final ExpenseRepository _repository;
@@ -29,6 +33,26 @@ class ExpensesBloc extends Bloc<ExpensesEvent, ExpensesState> {
       emit(ExpensesLoadOnSuccess(expenses));
     } on Exception {
       emit(const ExpensesLoadOnFailure());
+    }
+  }
+
+  Future<void> _onExpensesDeleteEvent(
+    ExpensesDeleteEvent event,
+    Emitter<ExpensesState> emit,
+  ) async {
+    if (state case ExpensesLoadOnSuccess(:final expenses)) {
+      emit(const ExpensesLoadInProgress());
+
+      try {
+        await _repository.delete(event.id);
+        final newExpenses = List.of(expenses)
+          ..removeWhere((expense) => expense.id == event.id);
+        emit(
+          ExpensesLoadOnSuccess(newExpenses),
+        );
+      } on Exception {
+        emit(const ExpensesLoadOnFailure());
+      }
     }
   }
 }
