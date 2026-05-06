@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:trackify/injector.dart';
 import 'package:trackify/ui/router/config.dart';
 
-void main() {
+Future<void> main() async {
+  await Injector.setupDependencies();
   runApp(const App());
 }
 
