@@ -51,5 +51,6 @@ void main() {
       const AddExpenseLoadInProgress(),
       AddExpenseLoadOnSuccess(expense),
     ],
+    verify: (_) => verify(() => repository.save(newExpense)).called(1),
   );
 }

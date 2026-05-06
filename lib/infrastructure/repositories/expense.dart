@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:sqlite_async/sqlite_async.dart';
 import 'package:trackify/domain/interfaces/expense.dart';
+import 'package:trackify/domain/models/category.dart';
 import 'package:trackify/domain/models/expense.dart';
 import 'package:trackify/domain/models/new_expense.dart';
 import 'package:trackify/infrastructure/entities/expense.dart';
@@ -41,10 +42,11 @@ WHERE id = ?
   );
 
   @override
-  Future<List<Expense>> getAll() async {
+  Future<List<Expense>> getAll([ExpenseCategory? category]) async {
     final rows = await _db.getAll('''
 SELECT id, description, category, value, date
 FROM $tableName
+${category == null ? '' : 'WHERE category = ?'}
 ORDER BY date DESC, id DESC
     ''');
 
