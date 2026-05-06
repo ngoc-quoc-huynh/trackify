@@ -3,6 +3,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:sqlite_async/sqlite_async.dart';
 import 'package:trackify/domain/interfaces/expense.dart';
 import 'package:trackify/infrastructure/repositories/expense.dart';
+import 'package:trackify/ui/blocs/add_expense/bloc.dart';
 import 'package:trackify/ui/blocs/expenses/bloc.dart';
 
 final class Injector {
@@ -23,7 +24,8 @@ final class Injector {
           return repository;
         },
       )
-      ..registerFactory<ExpensesBloc>(() => ExpensesBloc(instance()));
+      ..registerFactory<ExpensesBloc>(() => ExpensesBloc(instance()))
+      ..registerFactory<AddExpenseBloc>(() => AddExpenseBloc(instance()));
 
     await instance.allReady();
   }

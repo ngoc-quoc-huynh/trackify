@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:trackify/domain/models/expense.dart';
 import 'package:trackify/ui/blocs/expenses/bloc.dart';
+import 'package:trackify/ui/router/routes.dart';
 import 'package:trackify/ui/utils.dart';
 import 'package:trackify/ui/widgets/loading_indcator.dart';
 
@@ -11,15 +13,26 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: BlocSelector<ExpensesBloc, ExpensesState, bool>(
+        selector: (state) => state is ExpensesLoadOnSuccess,
+        builder: (context, state) => switch (state) {
+          true => FloatingActionButton(
+            onPressed: () => context.goNamed(AppRoute.add()),
+            child: const Icon(Icons.add),
+          ),
+          false => const SizedBox.shrink(),
+        },
+      ),
       appBar: AppBar(
         title: const Text('Trackify'),
       ),
       body: BlocBuilder<ExpensesBloc, ExpensesState>(
         builder: (context, state) => switch (state) {
           ExpensesLoadInProgress() => const LoadingInidcator(),
-          ExpensesLoadOnSuccess(:final expenses) when expenses.isEmpty => Text(
-            'There are no expenses yet, try adding one.',
-          ),
+          ExpensesLoadOnSuccess(:final expenses) when expenses.isEmpty =>
+            const Text(
+              'There are no expenses yet, try adding one.',
+            ),
           ExpensesLoadOnSuccess(:final expenses) => _Body(expenses),
           ExpensesLoadOnFailure() => const Text('Ooops, something went wrong'),
         },

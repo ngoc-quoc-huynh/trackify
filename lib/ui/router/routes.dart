@@ -1,5 +1,6 @@
 enum AppRoute {
-  home
+  home,
+  add
   ;
 
   String call() => name;
