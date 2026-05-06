@@ -1,0 +1,55 @@
+name: main
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
+  cancel-in-progress: true
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Setup mise
+        uses: jdx/mise-action@v4
+
+      - name: Restore cached flutter dependencies
+        id: pub-cache
+        uses: actions/cache/restore@v5
+        with:
+          path: ~/.pub-cache
+          key: pub-${{ runner.os }}-${{ hashFiles('pubspec.lock') }}
+          restore-keys: |
+            pub-${{ runner.os }}-
+
+      - name: Install flutter dependencies
+        run: flutter pub get --enforce-lockfile
+
+      - name: Cache flutter dependencies
+        if: steps.pub-cache.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v5
+        continue-on-error: true
+        with:
+          path:  ~/.pub-cache
+          key: ${{ steps.pub-cache.outputs.cache-primary-key }}
+
+      - name: Check formatting
+        run: dart format --set-exit-if-changed lib test
+
+      - name: Analyze code
+        run: flutter analyze
+
+      - name: Run code metrics
+        run: dart run dart_code_linter:metrics analyze . --set-exit-on-violation-level=warning
+
+      - name: Run tests
+        run: flutter test
