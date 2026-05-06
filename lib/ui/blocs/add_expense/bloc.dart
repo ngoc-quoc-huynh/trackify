@@ -24,6 +24,7 @@ class AddExpenseBloc extends Bloc<AddExpenseEvent, AddExpenseState> {
     Emitter<AddExpenseState> emit,
   ) async {
     emit(const AddExpenseLoadInProgress());
+    // TODO: Handle errors
     final expense = await _repository.save(event.newExpense);
     emit(AddExpenseLoadOnSuccess(expense));
   }

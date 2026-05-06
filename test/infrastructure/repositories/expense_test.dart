@@ -124,5 +124,7 @@ SELECT EXISTS (
         ],
       );
     });
+
+    // TODO: Add tests for category filter
   });
 }
